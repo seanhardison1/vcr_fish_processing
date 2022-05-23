@@ -76,10 +76,12 @@ fish2019_final <-
   dplyr::select(-site, -COUNT_Total, -CODE) %>% 
   rename_with(str_to_lower, DATE:fish_site) %>% 
   dplyr::rename(depth = depth_cm) %>% 
+  rowwise() %>% 
   mutate(do = mean(c_across(c(`do_top_mg/l`,`do_bottom_mg/l`)), na.rm = T),
          temperature = mean(c_across(c(temp_top_c, temp_bottom_c)), na.rm = T),
          salinity = mean(c_across(c(sal_top_permil, sal_bottom_permil)), na.rm = T),
          conductivity = mean(c_across(c(cond_top_ms, cond_bottom_ms)), na.rm = T)) %>% 
+  ungroup() %>% 
   dplyr::select(-`do_top_mg/l`:-cond_bottom_ms) %>% 
   dplyr::rename(length = length_cm,
                 length_category = cat_cm) %>% 
@@ -146,7 +148,9 @@ fish_final <- bind_rows(fish2019_final,
   mutate(year = year(date),
          depth = ifelse(year == 2019,
                         depth/100,
-                        depth))
+                        depth),
+         datetime = strftime(as.POSIXlt(paste(date, time)),
+                             "%Y-%m-%dT%H:%M:%S")) 
 
 write.csv(fish_final, file = here::here("output/vcr_fish_sampling.csv"),
           row.names = F)
