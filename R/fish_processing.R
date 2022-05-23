@@ -150,7 +150,8 @@ fish_final <- bind_rows(fish2019_final,
                         depth/100,
                         depth),
          datetime = strftime(as.POSIXlt(paste(date, time)),
-                             "%Y-%m-%dT%H:%M:%S")) 
+                             "%Y-%m-%dT%H:%M:%S")) %>% 
+  dplyr::select(-date, -time)
 
 write.csv(fish_final, file = here::here("output/vcr_fish_sampling.csv"),
           row.names = F)
