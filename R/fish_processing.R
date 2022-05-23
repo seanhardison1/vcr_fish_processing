@@ -97,7 +97,7 @@ fish_2021 <- read_csv(here::here("data/FishQueryTable_10.27.2021.csv")) %>%
                 fish_site = site,
                 common = speciesName) %>% 
   mutate(time = format(.$time, "%H:%M:%S"),
-         date = as.Date(date, "%d/%m/%Y"),
+         date = as.Date(date, "%m/%d/%Y"),
          fish_longitude = fish_longitude * -1,
          fish_longitude = ifelse(fish_site == "HI_1", -75.72969, fish_longitude),
          fish_site = str_to_upper(paste0("FISH-",str_remove_all(fish_site, "_"))),
